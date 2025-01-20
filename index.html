@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rendición de Caja</title>
+    <!-- ✅ Bootstrap 5.3.3 con validadores nativos -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
+          rel="stylesheet" 
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
+          crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" 
+            crossorigin="anonymous"></script>
+    <script src="script.js" defer></script>
+</head>
+
+<body class="container mt-5">
+    <h1 class="text-center mb-4">Rendición de Caja</h1>
+
+    <!-- ✅ Campo Fecha -->
+    <div class="mb-3">
+        <label for="fecha" class="form-label">Fecha de Cierre</label>
+        <input type="date" class="form-control" id="fecha" required>
+    </div>
+
+    <!-- ✅ Combo de Selección de Cajas -->
+    <div class="mb-3">
+        <label for="caja" class="form-label">Caja</label>
+        <select class="form-select" id="caja" disabled>
+            <option value="">Seleccione una caja</option>
+        </select>
+        <div class="spinner-border position-absolute top-50 start-50 translate-middle d-none" id="spinnerCajas" role="status" aria-hidden="true"></div>
+    </div>
+
+    <!-- ✅ Datos de la Caja -->
+    <h3 class="mt-4">Datos de la Caja</h3>
+    <div class="row g-3">
+        <div class="col-md-4">
+            <label for="saldoInicial" class="form-label">Saldo Inicial</label>
+            <input type="text" class="form-control text-end" id="saldoInicial" disabled>
+        </div>
+        <div class="col-md-4">
+            <label for="acumulado" class="form-label">Acumulado</label>
+            <input type="text" class="form-control text-end" id="acumulado" disabled>
+        </div>
+        <div class="col-md-4">
+            <label for="saldoTotal" class="form-label">Saldo Total</label>
+            <input type="text" class="form-control text-end" id="saldoTotal" disabled>
+        </div>
+        <div class="col-md-4">
+            <label for="saldoCierre" class="form-label">Saldo al Cierre</label>
+            <input type="text" class="form-control text-end" id="saldoCierre" disabled>
+        </div>
+        <div class="col-md-4">
+            <label for="cajera" class="form-label">Cajera</label>
+            <input type="text" class="form-control text-end" id="cajera" disabled>
+        </div>
+    </div>
+
+    <!-- ✅ Sección de Rendición de Valores con validación de moneda -->
+    <h3 class="mt-4">Rendición de Valores</h3>
+    <div class="row g-3">
+        <div class="col-md-3">
+            <label for="billetes" class="form-label">Billetes</label>
+            <input type="text" class="form-control text-end" id="billetes" inputmode="decimal">
+        </div>
+        <div class="col-md-3">
+            <label for="feria" class="form-label">Feria</label>
+            <input type="text" class="form-control text-end" id="feria" inputmode="decimal" onblur="calcularTotalCaja()"">
+        </div>
+        <div class="col-md-3">
+            <label for="cheques" class="form-label">Cheques</label>
+            <input type="text" class="form-control text-end" id="cheques" inputmode="decimal" onblur="calcularTotalCaja()"">
+        </div>
+        <div class="col-md-3">
+            <label for="vouchers" class="form-label">Vouchers</label>
+            <input type="text" class="form-control text-end" id="vouchers" inputmode="decimal" onblur="calcularTotalCaja()"">
+        </div>
+        <div class="col-md-3">
+            <label for="vales" class="form-label">Vales</label>
+            <input type="text" class="form-control text-end" id="vales" inputmode="decimal" onblur="calcularTotalCaja()">
+        </div>
+        <div class="col-md-3">
+            <label for="transferencias" class="form-label">Transferencias</label>
+            <input type="text" class="form-control text-end" id="transferencias" inputmode="decimal" onblur="calcularTotalCaja()">
+        </div>
+
+        <div class="col-md-3" id="contenedorDolares" >
+            <label for="dolares" class="form-label">Dólares</label>
+            <input type="text" class="form-control text-end" id="dolares" inputmode="decimal" onblur="calcularValorDolaresMXN()">
+        </div>
+
+        <div class="col-md-3" id="contenedorTipoCambio" hidden="true">
+            <label for="tipoCambio" class="form-label">Tipo de Cambio</label>
+            <input type="text" class="form-control text-end" id="tipoCambio" inputmode="decimal" onblur="calcularValorDolaresMXN()">
+        </div>
+
+        <div class="col-md-3" id="contenedorValorDolaresMXN" hidden="true">
+            <label for="valorDolaresMXN" class="form-label">Valor Dólares MXN (Auto)</label>
+            <input type="text" class="form-control " id="valorDolaresMXN" disabled >
+        </div>
+
+    </div>
+
+    <!-- ✅ Sección de Gastos -->
+    <h3 class="mt-4">Gastos</h3>
+    <div class="row g-3">
+        <div class="col-md-3">
+            <label for="laboratorios" class="form-label">Laboratorios</label>
+            <input type="text" class="form-control text-end" id="laboratorios" inputmode="decimal">
+        </div>
+        <div class="col-md-3">
+            <label for="comidas" class="form-label">Comidas</label>
+            <input type="text" class="form-control text-end" id="comidas" inputmode="decimal">
+        </div>
+        <div class="col-md-3">
+            <label for="proveedores" class="form-label">Proveedores</label>
+            <input type="text" class="form-control text-end" id="proveedores" inputmode="decimal">
+        </div>
+        <div class="col-md-3">
+            <label for="otros" class="form-label">Otros</label>
+            <input type="text" class="form-control text-end" id="otros" inputmode="decimal">
+        </div>
+    </div>
+
+    <!-- ✅ Resumen Final -->
+    <h3 class="mt-4">Resumen Final</h3>
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label for="totalEnCaja" class="form-label">Total en Caja</label>
+            <input type="text" class="form-control text-end" id="totalEnCaja" disabled>
+        </div>
+        <div class="col-md-6">
+            <label for="diferencia" class="form-label">Diferencia</label>
+            <input type="text" class="form-control text-end" id="diferencia" disabled>
+        </div>
+    </div>
+
+    <div class="row g-3" hidden="true">
+    <!-- ✅ Textareas para Monitoreo -->
+    <h3 class="mt-4">Monitoreo de Solicitudes y Respuestas</h3>
+    
+    <label for="requestString" class="form-label">Query a endpoint</label>
+    <textarea class="form-control" id="requestString" rows="3" disabled></textarea>
+    <label for="responseJson" class="form-label">Respuesta en jSON</label>
+    <textarea class="form-control mt-2" id="responseJson" rows="6" disabled></textarea>
+    </div>
+    <!-- ✅ Mensajes de Error -->
+    <p id="errorMessage" class="text-danger mt-3"></p>
+
+</body>
+</html>
