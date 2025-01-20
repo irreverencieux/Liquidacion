@@ -1,5 +1,5 @@
 // ✅ Token seguro y base URL
-const token = "elpkaXPV92X55ueGM9U56fyrqifJKoMuphALxKLu.4jIqcGQ2IV1WpSZmPKhooGMZO0PeaKrbS0zmzNnL";
+const token = "";
 const apiBaseUrl = "https://api.dentalink.healthatom.com/api/v1";
 
 // ✅ Variables Globales
