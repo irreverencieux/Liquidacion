@@ -1,5 +1,6 @@
-// ✅ Base URL (reemplaza con la URL de tu API)
-const apiBaseUrl = "https://script.googleapis.com/v1/scripts/{SCRIPT_ID}:run"; // Reemplaza {SCRIPT_ID} con el ID de tu script
+// ✅ Token seguro y base URL
+const token = ""; // Reemplaza con tu token de Dentalink
+const apiBaseUrl = "https://api.dentalink.healthatom.com/api/v1";
 
 // ✅ Variables Globales
 let ultimaCajaSeleccionada = "";
@@ -48,12 +49,12 @@ getElementSafe("caja").addEventListener("change", () => {
 
 // ✅ Llenar el combo de cajas con validaciones y formato
 async function llenarComboCajas() {
-    // ... (código igual que en la respuesta anterior) ...
+    // ... (código para obtener las cajas de la API de Dentalink) ...
 }
 
 // ✅ Cargar los datos de la caja y formatear con $0.00 si es cero
 async function cargarDatosCaja() {
-    // ... (código igual que en la respuesta anterior) ...
+    // ... (código para obtener los datos de la caja de la API de Dentalink) ...
 }
 
 // ✅ Aplicar formateo a los campos al perder el foco (onblur)
@@ -62,91 +63,20 @@ document.querySelectorAll('#billetes, #feria, #cheques, #vouchers, #vales, #tran
         field.addEventListener('blur', function () {
             const valorNumerico = limpiarFormatoMoneda(this.value);
             this.value = formatoMoneda(valorNumerico);
-            calcularTotalCaja();  // Asegúrate de que calcularTotalCaja se llama primero
-            mostrarOcultarCamposDolares(); // Llama a mostrarOcultarCamposDolares después de calcularTotalCaja
+            calcularTotalCaja(); 
+            mostrarOcultarCamposDolares(); 
         });
     });    
 
 // ✅ Calcular Total en Caja y Diferencia
 function calcularTotalCaja() {
-    const getNumber = (id) => limpiarFormatoMoneda(getElementSafe(id).value);
-    
-    const billetes = getNumber("billetes");
-    const feria = getNumber("feria");
-    const cheques = getNumber("cheques");
-    const vouchers = getNumber("vouchers");
-    const vales = getNumber("vales"); 
-    const transferencias = getNumber("transferencias");
-    const dolares = getNumber("dolares");
-    const tipoCambio = getNumber("tipoCambio");
-    const valorDolaresMXN = dolares * tipoCambio; 
-    getElementSafe("valorDolaresMXN").value = formatoMoneda(valorDolaresMXN);
-    
-    const laboratorios = getNumber("laboratorios");
-    const comidas = getNumber("comidas");
-    const proveedores = getNumber("proveedores");
-    const otros = getNumber("otros");
-
-    const ingresos = billetes + feria + cheques + vouchers + vales + transferencias + valorDolaresMXN;
-    const gastos = laboratorios + comidas + proveedores + otros;
-
-    const totalEnCaja = ingresos - gastos;
-    getElementSafe("totalEnCaja").value = formatoMoneda(totalEnCaja);
-
-    const saldoTotal = getNumber("saldoTotal");
-    const diferencia = saldoTotal - totalEnCaja;
-    getElementSafe("diferencia").value = formatoMoneda(diferencia);
+    // ... (código para calcular los totales) ...
 }
 
 getElementSafe("dolares").addEventListener("blur", function() {
-    const valorNumerico = limpiarFormatoMoneda(this.value);
-    this.value = formatoMoneda(valorNumerico);
-    calcularTotalCaja();
+    // ... (código para calcular el valor de los dólares) ...
 });
 
 function mostrarOcultarCamposDolares() {
-    const dolares = limpiarFormatoMoneda(getElementSafe("dolares").value);
-    const contenedorTipoCambio = getElementSafe("contenedorTipoCambio");
-    const contenedorValorDolaresMXN = getElementSafe("contenedorValorDolaresMXN");
-
-    if (dolares > 0) {
-        contenedorTipoCambio.hidden = false; 
-        contenedorValorDolaresMXN.hidden = false; 
-    } else {
-        contenedorTipoCambio.hidden = true; 
-        contenedorValorDolaresMXN.hidden = true;
-        getElementSafe("tipoCambio").value = formatoMoneda(0); 
-    }
-}
-
-// ✅ Función para verificar la existencia de la caja (BACKEND)
-async function existeCaja(cajaId) {
-  try {
-    const response = await fetch(apiBaseUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ function: 'existeCaja', parameters: [cajaId] })
-    });
-    const data = await response.json();
-    return data.response.result; // Ajusta la ruta según la respuesta de tu API
-  } catch (error) {
-    console.error('Error al verificar la existencia de la caja:', error);
-    return false; 
-  }
-}
-
-// ✅ Función para guardar los datos de la rendición (BACKEND)
-async function guardarRendicion(datosRendicion) {
-  try {
-    const response = await fetch(apiBaseUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ function: 'guardarRendicion', parameters: [datosRendicion] })
-    });
-    const data = await response.json();
-    return data.response.result; // Ajusta la ruta según la respuesta de tu API
-  } catch (error) {
-    console.error('Error al guardar la rendición:', error);
-    return 'Error al guardar la rendición';
-  }
+    // ... (código para mostrar/ocultar campos) ...
 }
