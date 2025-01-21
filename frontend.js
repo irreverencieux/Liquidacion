@@ -32,6 +32,26 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     document.body.appendChild(script);
+    
+        // Detectar si es Safari
+        if (isSafari()) {
+            console.log("Safari detectado. Inicializando Flatpickr...");
+            
+            // Cambiar el input a texto para evitar conflictos
+            const fechaInput = document.getElementById("fecha");
+            if (fechaInput) {
+                fechaInput.setAttribute("type", "text");
+            }
+    
+            // Inicializar Flatpickr
+            flatpickr("#fecha", {
+                dateFormat: "Y-m-d", // Formato esperado por la API
+                locale: "es",        // Español
+            });
+        } else {
+            console.log("No es Safari. Se usa el control nativo.");
+        }
+        
 });
 
 // ✅ Función segura para obtener elementos y manejar errores
@@ -109,13 +129,21 @@ function mostrarOcultarCamposDolares() {
     const contenedorValorDolaresMXN = getElementSafe("contenedorValorDolaresMXN");
 
     if (dolares > 0) {
-        contenedorTipoCambio.hidden = false; // Mostrar contenedorTipoCambio
-        contenedorValorDolaresMXN.hidden = false; // Mostrar contenedorValorDolaresMXN
+        contenedorTipoCambio.hidden = false;
+        contenedorValorDolaresMXN.hidden = false;
     } else {
-        contenedorTipoCambio.hidden = true; // Ocultar contenedorTipoCambio
-        contenedorValorDolaresMXN.hidden = true; // Ocultar contenedorValorDolaresMXN
-        getElementSafe("tipoCambio").value = formatoMoneda(0); // Restablecer el valor a cero
+        contenedorTipoCambio.hidden = true;
+        contenedorValorDolaresMXN.hidden = true;
+        getElementSafe("tipoCambio").value = "";
+        getElementSafe("valorDolaresMXN").value = "";
     }
+}
+
+function isSafari() {
+    return (
+        navigator.userAgent.includes("Safari") && 
+        !navigator.userAgent.includes("Chrome")
+    );
 }
 
 

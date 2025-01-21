@@ -22,8 +22,16 @@ function getElementSafe(id) {
 // ✅ Llenar el combo de cajas con validaciones y formato
 async function llenarComboCajas() {
     const fechaSeleccionada = getElementSafe("fecha").value;
+
+    // Validar formato de fecha
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(fechaSeleccionada)) {
+        console.error("Formato de fecha incorrecto:", fechaSeleccionada);
+        return;
+    }   
     const cajaSelect = getElementSafe("caja");
     const errorMessage = getElementSafe("errorMessage");
+
+
 
     if (!cajaSelect || !errorMessage) return;
 
@@ -33,7 +41,7 @@ async function llenarComboCajas() {
 
     if (!fechaSeleccionada) {
         errorMessage.textContent = "⚠️ Por favor, selecciona una fecha válida.";
-        cajaSelect.disabled = false;
+        //cajaSelect.disabled = false;
         return;
     }
 
@@ -63,7 +71,6 @@ async function llenarComboCajas() {
 
         if (cajas.length === 0) {
             cajaSelect.innerHTML = `<option value="">No hay cajas abiertas</option>`;
-            cajaSelect.disabled = false;
             return;
         }
 
