@@ -1,5 +1,39 @@
 // frontend.js
 
+document.addEventListener("DOMContentLoaded", () => {
+    // Cargar backend.js dinámicamente
+    const script = document.createElement("script");
+    script.src = "backend.js";
+    script.defer = true;
+    script.onload = () => {
+        if(debug) console.log("frontend.js cargado correctamente");
+
+        // Listener para el cambio en la fecha
+        const fechaInput = document.getElementById("fecha");
+        if (fechaInput) {
+            fechaInput.addEventListener("change", () => {
+                console.log("Evento de cambio en fecha disparado.");
+                llenarComboCajas(); // Cargar las cajas
+            });
+        } else {
+            console.error("Elemento con ID 'fecha' no encontrado.");
+        }
+
+        // Listener para el cambio en el combo de cajas
+        const cajaSelect = document.getElementById("caja");
+        if (cajaSelect) {
+            cajaSelect.addEventListener("change", () => {
+                console.log("Evento de cambio en combo de cajas disparado.");
+                cargarDatosCaja(); // Cargar los datos de la caja seleccionada
+            });
+        } else {
+            console.error("Elemento con ID 'caja' no encontrado.");
+        }
+    };
+
+    document.body.appendChild(script);
+});
+
 // ✅ Función segura para obtener elementos y manejar errores
 function getElementSafe(id) {
     const element = document.querySelector(`#${id}`);
@@ -84,10 +118,5 @@ function mostrarOcultarCamposDolares() {
     }
 }
 
-// ✅ Incluir backend.js
-document.addEventListener("DOMContentLoaded", () => {
-    const script = document.createElement("script");
-    script.src = "backend.js";
-    script.defer = true;
-    document.body.appendChild(script);
-});
+
+

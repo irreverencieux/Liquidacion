@@ -1,4 +1,9 @@
 // backend.js
+const debug=true;
+if(debug) console.log("backend.js cargado correctamente.");
+
+window.llenarComboCajas = llenarComboCajas;
+window.cargarDatosCaja = cargarDatosCaja;
 
 // ✅ Token seguro y base URL
 const token = "elpkaXPV92X55ueGM9U56fyrqifJKoMuphALxKLu.4jIqcGQ2IV1WpSZmPKhooGMZO0PeaKrbS0zmzNnL"; // Reemplaza con tu token de Dentalink
@@ -18,11 +23,9 @@ function getElementSafe(id) {
 async function llenarComboCajas() {
     const fechaSeleccionada = getElementSafe("fecha").value;
     const cajaSelect = getElementSafe("caja");
-    const requestStringBox = getElementSafe("requestString");
-    const responseJsonBox = getElementSafe("responseJson");
     const errorMessage = getElementSafe("errorMessage");
 
-    if (!cajaSelect || !requestStringBox || !responseJsonBox || !errorMessage) return;
+    if (!cajaSelect || !errorMessage) return;
 
     cajaSelect.disabled = true;
     cajaSelect.innerHTML = `<option value="">Cargando cajas...</option>`;
@@ -37,8 +40,13 @@ async function llenarComboCajas() {
     const spinnerCajas = getElementSafe("spinnerCajas");
     spinnerCajas.classList.remove("d-none"); // Mostrar el spinner
     try {
-        const url = `${apiBaseUrl}/cajas?q={"fecha_cierre":{"eq":"${fechaSeleccionada}"},"estado":{"eq":0}}`;
-        requestStringBox.value = `GET ${url}`;
+        // Estas constantes se agregaron porque en la vida real, las cajas a rendir son las abiertas, no las cerradas.
+        //TODO: Hacer que al rendir la caja, las obligue a cerrarla y enlazarla.
+        const tipoCaja = "1";//"0";
+        const campoFecha = "fecha_apertura";//"fecha_cierre";
+
+        const url = `${apiBaseUrl}/cajas?q={"${campoFecha}":{"eq":"${fechaSeleccionada}"},"estado":{"eq":"${tipoCaja}"}}`;
+        if (debug) console.log("Consulta a la API:", url);
 
         const response = await fetch(url, {
             method: "GET",
@@ -46,7 +54,7 @@ async function llenarComboCajas() {
         });
 
         const responseText = await response.text();
-        responseJsonBox.value = responseText;
+        
 
         if (!response.ok) throw new Error(`Error al obtener cajas: ${response.status} - ${responseText}`);
 
@@ -54,7 +62,7 @@ async function llenarComboCajas() {
         const cajas = data.data;
 
         if (cajas.length === 0) {
-            cajaSelect.innerHTML = `<option value="">No hay cajas cerradas</option>`;
+            cajaSelect.innerHTML = `<option value="">No hay cajas abiertas</option>`;
             cajaSelect.disabled = false;
             return;
         }
@@ -66,6 +74,8 @@ async function llenarComboCajas() {
         });
 
         cajaSelect.disabled = false;
+        if (debug) console.log("Respuesta de la API:", responseText);
+
         errorMessage.textContent = "✅ Cajas cargadas exitosamente.";
     } catch (error) {
         errorMessage.textContent = `❌ Error: ${error.message}`;
@@ -78,7 +88,6 @@ async function llenarComboCajas() {
 // ✅ Cargar los datos de la caja y formatear con $0.00 si es cero
 async function cargarDatosCaja() {
     const cajaSeleccionada = getElementSafe("caja").value;
-    const responseJsonBox = getElementSafe("responseJson");
     const errorMessage = getElementSafe("errorMessage");
 
     if (!cajaSeleccionada) {
@@ -90,14 +99,13 @@ async function cargarDatosCaja() {
     spinnerCajas.classList.remove("d-none"); // Mostrar el spinner al inicio
     try {
         const url = `${apiBaseUrl}/cajas/${cajaSeleccionada}`;
+        if (debug) console.log("Consulta a la API:", url);
         const response = await fetch(url, {
             method: "GET",
             headers: { "Authorization": `Token ${token}` }
         });
 
         const responseText = await response.text();
-        responseJsonBox.value = responseText;
-
         if (!response.ok) throw new Error(`Error al obtener caja: ${response.statusText}`);
 
         const caja = JSON.parse(responseText).data;
@@ -107,7 +115,7 @@ async function cargarDatosCaja() {
         getElementSafe("saldoTotal").value = formatoMoneda(caja.saldo_total ?? 0);
         getElementSafe("saldoCierre").value = formatoMoneda(caja.saldo_cierre ?? 0);
         getElementSafe("cajera").value = caja.nombre_usuario || "Desconocido";
-
+        if (debug) console.log("Respuesta de la API:", responseText);
         errorMessage.textContent = "✅ Datos de la caja cargados exitosamente.";
     } catch (error) {
         errorMessage.textContent = `❌ Error al cargar la caja: ${error.message}`;
