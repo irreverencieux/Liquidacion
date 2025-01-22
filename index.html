@@ -105,25 +105,51 @@
 
     </div>
 
-    <h3 class="mt-4">Gastos</h3>
-    <div class="row g-3">
-        <div class="col-md-3">
-            <label for="laboratorios" class="form-label">Laboratorios</label>
-            <input type="text" class="form-control text-end" id="laboratorios" inputmode="decimal">
-        </div>
-        <div class="col-md-3">
-            <label for="comidas" class="form-label">Comidas</label>
-            <input type="text" class="form-control text-end" id="comidas" inputmode="decimal">
-        </div>
-        <div class="col-md-3">
-            <label for="proveedores" class="form-label">Proveedores</label>
-            <input type="text" class="form-control text-end" id="proveedores" inputmode="decimal">
-        </div>
-        <div class="col-md-3">
-            <label for="otros" class="form-label">Otros</label>
-            <input type="text" class="form-control text-end" id="otros" inputmode="decimal">
-        </div>
+    <h3 class="mt-4">Registro de Gastos</h3>
+    <div class="table-responsive mb-3">
+        <table class="table table-bordered" id="tablaGastos">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Categoría</th>
+                    <th>Descripción</th>
+                    <th>Importe</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aquí se agregarán las filas dinámicamente -->
+            </tbody>
+        </table>
+        <button class="btn btn-success" id="btnAgregarGasto">
+            <!-- Botón con icono de agregar -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+            </svg>
+        </button>
     </div>
+
+
+<!-- Campos existentes para totales -->
+<h3 class="mt-4">Gastos Totales por Categoría</h3>
+<div class="row g-3">
+    <div class="col-md-3">
+        <label for="laboratorios" class="form-label">Laboratorios</label>
+        <input type="text" class="form-control text-end" id="laboratorios" inputmode="decimal" readonly>
+    </div>
+    <div class="col-md-3">
+        <label for="comidas" class="form-label">Comidas</label>
+        <input type="text" class="form-control text-end" id="comidas" inputmode="decimal" readonly>
+    </div>
+    <div class="col-md-3">
+        <label for="proveedores" class="form-label">Proveedores</label>
+        <input type="text" class="form-control text-end" id="proveedores" inputmode="decimal" readonly>
+    </div>
+    <div class="col-md-3">
+        <label for="otros" class="form-label">Otros</label>
+        <input type="text" class="form-control text-end" id="otros" inputmode="decimal" readonly>
+    </div>
+</div>
 
     <h3 class="mt-4">Resumen Final</h3>
     <div class="row g-3">
